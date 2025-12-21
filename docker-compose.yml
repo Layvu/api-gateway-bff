@@ -43,6 +43,17 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=usersdb;Username=postgres;Password=postgres
 
+  product-service:
+    build:
+      context: .
+      dockerfile: src/ProductService/Dockerfile
+    ports:
+      - "5002:8080"
+    depends_on:
+      - postgres
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=productsdb;Username=postgres;Password=postgres
+
   postgres:
     image: postgres:15-alpine
     ports:
