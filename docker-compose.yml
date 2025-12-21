@@ -31,6 +31,8 @@ services:
       - Redis__ConnectionString=redis:6379
       - Seq__ServerUrl=http://seq:5341
       - Microservices__UserApiUrl=http://user-service:8080
+      - Microservices__ProductApiUrl=http://product-service:8080
+      - Microservices__OrderApiUrl=http://order-service:8080
 
   user-service:
     build:

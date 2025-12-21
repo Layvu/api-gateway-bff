@@ -1,4 +1,5 @@
 using ApiGateway.Features.Profile;
+using System.Net.Http.Json;
 
 namespace ApiGateway.Services;
 
@@ -11,17 +12,16 @@ public class ProductServiceClient : HttpServiceClientBase, IProductServiceClient
     {
         try
         {
-            // Временная заглушка
-            await Task.Delay(100, ct);
-            return new List<ProductDto>
-            {
-                new ProductDto("1", "Laptop", 999.99m),
-                new ProductDto("2", "Mouse", 25.50m)
-            };
+            var response = await HttpClient.GetAsync("/api/products", ct);
+
+            response.EnsureSuccessStatusCode();
+
+            var products = await response.Content.ReadFromJsonAsync<List<ProductDto>>(JsonOptions, ct);
+            return products ?? new List<ProductDto>();
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error getting favorite products for user {UserId}", userId);
+            Logger.LogError(ex, "Error getting products for user {UserId}", userId);
             return null;
         }
     }

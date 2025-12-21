@@ -1,4 +1,5 @@
 using ApiGateway.Features.Profile;
+using System.Net.Http.Json;
 
 namespace ApiGateway.Services;
 
@@ -11,13 +12,17 @@ public class OrderServiceClient : HttpServiceClientBase, IOrderServiceClient
     {
         try
         {
-            // Временная заглушка
-            await Task.Delay(100, ct);
-            return new List<OrderDto>
+            var response = await HttpClient.GetAsync($"/api/orders/user/{userId}", ct);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                new OrderDto("1", DateTime.UtcNow.AddDays(-1), 100.50m),
-                new OrderDto("2", DateTime.UtcNow.AddDays(-5), 200.00m)
-            };
+                return new List<OrderDto>();
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var orders = await response.Content.ReadFromJsonAsync<List<OrderDto>>(JsonOptions, ct);
+            return orders ?? new List<OrderDto>();
         }
         catch (Exception ex)
         {
