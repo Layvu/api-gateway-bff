@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "src\ApiGatewa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "src\UserService\UserService.csproj", "{27D0613D-8C11-41CA-AFED-649C5823E07E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "src\OrderService\OrderService.csproj", "{4B07ABE2-AC7C-4FDE-88C2-ED18C3F7EC9F}"
+Project("{FAE04EC0-301F-11D3-0.BF4B-00C04F79EFBC}") = "OrderService", "src\OrderService\OrderService.csproj", "{4B07ABE2-AC7C-4FDE-88C2-ED18C3F7EC9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService", "src\ProductService\ProductService.csproj", "{77FD4577-1B50-4087-A60F-384A7AB612D0}"
 EndProject
