@@ -1,5 +1,6 @@
 using ApiGateway.Extensions;
 using ApiGateway.Features.Profile;
+using ApiGateway.Services;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using System.Threading.RateLimiting;
@@ -27,15 +28,39 @@ builder.Services.AddRateLimiter(options =>
 // Основные сервисы
 builder.Services.AddHttpClient();
 builder.Services.AddCustomCache(builder.Configuration);
-builder.Services.AddCustomHttpClients(builder.Configuration);
 builder.Services.AddScoped<ProfileAggregator>();
+
+// Получаем URL-ы
+var userServiceUrl = builder.Configuration["Microservices:UserApiUrl"] ?? "http://localhost:5001";
+var orderServiceUrl = builder.Configuration["Microservices:OrderApiUrl"] ?? "http://localhost:5003";
+var productServiceUrl = builder.Configuration["Microservices:ProductApiUrl"] ?? "http://localhost:5002";
+
+// Регистрируем HTTP клиенты с политиками Polly
+builder.Services.AddHttpClient<IUserServiceClient, UserServiceClient>(client =>
+{
+    client.BaseAddress = new Uri(userServiceUrl);
+})
+.AddPolicyHandler(PollyPolicies.GetRetryPolicy())
+.AddPolicyHandler(PollyPolicies.GetCircuitBreakerPolicy());
+
+builder.Services.AddHttpClient<IOrderServiceClient, OrderServiceClient>(client =>
+{
+    client.BaseAddress = new Uri(orderServiceUrl);
+})
+.AddPolicyHandler(PollyPolicies.GetRetryPolicy())
+.AddPolicyHandler(PollyPolicies.GetCircuitBreakerPolicy());
+
+builder.Services.AddHttpClient<IProductServiceClient, ProductServiceClient>(client =>
+{
+    client.BaseAddress = new Uri(productServiceUrl);
+})
+.AddPolicyHandler(PollyPolicies.GetRetryPolicy())
+.AddPolicyHandler(PollyPolicies.GetCircuitBreakerPolicy());
 
 var app = builder.Build();
 
-// до endpoint’ов
 app.UseRateLimiter();
 
-// Эндпоинты
 app.MapProfileEndpoints();
 
 app.Run();

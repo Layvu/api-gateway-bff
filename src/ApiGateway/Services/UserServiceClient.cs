@@ -1,4 +1,5 @@
 using ApiGateway.Features.Profile;
+using System.Net.Http.Json;
 
 namespace ApiGateway.Services;
 
@@ -11,10 +12,17 @@ public class UserServiceClient : HttpServiceClientBase, IUserServiceClient
     {
         try
         {
-            // Временная заглушка
-            // В реальности тут будет HTTP вызов к /api/users/{userId}
-            await Task.Delay(100, ct); // Имитация задержки сети
-            return new UserDto(userId, "John Doe", "john.doe@example.com");
+            var response = await HttpClient.GetAsync($"/api/users/{userId}", ct);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Logger.LogWarning("User {UserId} not found in remote service", userId);
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<UserDto>(JsonOptions, ct);
         }
         catch (Exception ex)
         {
