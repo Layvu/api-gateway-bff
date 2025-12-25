@@ -41,7 +41,7 @@ docker-compose up --build -d
 
 | Сервис | Адрес |
 |-----|-------------|
-| API Gateway | http://localhost:8080/api/profile/123 | |
+| API Gateway | http://localhost:8080/api/profile/1 | |
 | Seq logs | http://localhost:5341 (логин/пароль для первого входа: admin/Admin123!)
 | Redis | Работает на порту 6379
 
