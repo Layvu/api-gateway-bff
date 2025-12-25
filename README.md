@@ -61,9 +61,9 @@ docker-compose up --build -d
 | Products | http://localhost:5002/api/products |
 | Orders | http://localhost:5003/api/orders/user/1 |
 
-### Команда для полного сброса докер томов (в случае проблем)
+### Полный сброс докер томов (в случае проблем)
 
-Сброс докер томов: docker volume prune -f
+docker volume prune -f
 
 ## Помимо MVP необходимо:
 
